@@ -17,14 +17,12 @@ const db = create({
 })
 
 cache.define("insert", {}, async (document: any) => {
-  return new Promise(resolve => {
-    const docID = insert(db, document)
-    resolve({key: docID})
-  })
+  const docID = insert(db, document)
+  return {docID}
 })
 
 cache.define("search", {}, async (term: string) => {
-  return new Promise(resolve => resolve(search(db, {term})))
+  return search(db, {term})
 })
 
 async function main() {
