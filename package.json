@@ -1,0 +1,67 @@
+{
+  "name": "@mateonunez/lyra-cache",
+  "version": "0.0.1",
+  "description": "Create your Lyra's schema following the official specification",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "browser": "./dist/client/index.js",
+  "homepage": "https://github.com/mateonunez/lyra-cache#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mateonunez/lyra-cache.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mateonunez/lyra-cache/issues"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "format": "prettier --write \"src/**/*.{ts,js}\"",
+    "lint": "npm run format && eslint . --ext .js,.ts",
+    "test": "c8 -c ./src/tests/config/c8.json tap --rcfile=./src/tests/config/tap.yml ./src/tests/**/*.test.ts",
+    "build:cjs": "tsc --project tsconfig.cjs.json",
+    "build:esm": "tsc --project tsconfig.esm.json",
+    "build:browser": "esbuild --bundle --sourcemap --target=es2019 --format=esm --outfile=./dist/client/index.js ./src/index.ts",
+    "build": "rimraf ./dist && npm run build:esm && npm run build:cjs && npm run build:browser",
+    "just": "ts-node --files ./src/index.ts"
+  },
+  "keywords": [
+    "lyra",
+    "plugin",
+    "boilerplate"
+  ],
+  "author": {
+    "email": "mateonunez95@gmail.com",
+    "name": "Mateo Nunez",
+    "url": "https://github.com/mateonunez"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@lyrasearch/lyra": "^0.2.7",
+    "async-cache-dedupe": "^1.4.2"
+  },
+  "devDependencies": {
+    "@fastify/pre-commit": "^2.0.2",
+    "@types/node": "^18.7.3",
+    "@types/tap": "^15.0.7",
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
+    "@typescript-eslint/parser": "^5.33.1",
+    "c8": "^7.12.0",
+    "esbuild": "^0.15.5",
+    "eslint": "^8.22.0",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "tap": "^16.3.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.3"
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,17 @@
+node_modules
+dist
+jest.config.js
+.eslintrc.js
+.prettierrc.js
+*.yaml
+*.md
+*.snap
+*.csv
+*.sh
+*.png
+*.html
+*.svg
+*.dpack
+*.css
+**/dist/**
+**/tap-snapshots/**

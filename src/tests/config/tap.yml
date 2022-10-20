@@ -1,0 +1,7 @@
+---
+jobs: 10
+timeout: 120
+reporter: base
+coverage: false
+node-arg:
+  - --loader=ts-node/esm
