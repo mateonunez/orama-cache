@@ -2,9 +2,10 @@
 import {createCache} from "async-cache-dedupe"
 import {create, insert, search} from "@lyrasearch/lyra"
 import {formatNanoseconds, getNanosecondsTime} from "@lyrasearch/lyra/dist/cjs/src/utils"
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 const cache = createCache({
-  ttl: 5,
+  ttl: 3,
   storage: {type: "memory"}
 })
 
@@ -46,6 +47,29 @@ async function main() {
   console.log({
     elapsedTimeCached: formatNanoseconds(getNanosecondsTime() - startTimeCached),
     fetchCached
+  })
+
+  const startTimeWithoutCache = getNanosecondsTime()
+  const fetchWithoutCache = search(db, {term: "Hello"})
+  console.log({
+    elapsedTimeWithoutCache: formatNanoseconds(getNanosecondsTime() - startTimeWithoutCache),
+    fetchWithoutCache
+  })
+
+  await sleep(4000)
+
+  const startTimeCachedAfterTTL = getNanosecondsTime()
+  const fetchCachedAfterTTL = await cache.search("Hello")
+  console.log({
+    elapsedTimeCachedAfterTTL: formatNanoseconds(getNanosecondsTime() - startTimeCachedAfterTTL),
+    fetchCachedAfterTTL
+  })
+
+  const startTimeCachedAfterTTL2 = getNanosecondsTime()
+  const fetchCachedAfterTTL2 = await cache.search("Hello")
+  console.log({
+    elapsedTimeCachedAfterTTL2: formatNanoseconds(getNanosecondsTime() - startTimeCachedAfterTTL2),
+    fetchCachedAfterTTL2
   })
 }
 
