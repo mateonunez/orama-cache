@@ -1,21 +1,5 @@
-# Lyra plugin boilerplate
+# Lyra cache
 
-Create your [Lyra](https://github.com/lyrasearch/lyra) plugin.
+Cache your [Lyra](https://github.com/lyrasearch/lyra) searches using [async-cache-dedupe](https://github.com/mcollina/async-cache-dedupe).
 
 [![Tests](https://github.com/mateonunez/lyra-cache/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mateonunez/lyra-cache/actions/workflows/ci.yml)
-
-## Installation
-
-You can install the package using `npm`, `yarn` or `pnpm`:
-
-> This is for example purposes only. You should use the name of your plugin.
-
-```bash
-npm i @mateonunez/lyra-cache
-```
-```bash
-yarn add @mateonunez/lyra-cache
-```
-```bash
-pnpm add @mateonunez/lyra-cache
-```
