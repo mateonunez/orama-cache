@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {createCache} from "async-cache-dedupe"
-import {create, insert, search} from "@lyrasearch/lyra"
+import {create, insert, search, insertWithHooks} from "@lyrasearch/lyra"
 import {formatNanoseconds, getNanosecondsTime} from "@lyrasearch/lyra/dist/cjs/src/utils"
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -16,18 +16,14 @@ const db = create({
   }
 })
 
-cache.define("insert", {}, async (document: any) => {
-  const docID = insert(db, document)
-  return {docID}
-})
 
 cache.define("search", {}, async (term: string) => {
   return search(db, {term})
 })
 
 async function main() {
-  for await (const _ of Array(100000).keys()) {
-    await cache.insert({
+  for (const _ of Array(100000).keys()) {
+    insert(db, {
       author: "John Doe",
       quote: `Hello World! ${_}`
     })
