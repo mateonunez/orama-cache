@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {createCache} from "async-cache-dedupe"
-import {create, insert, search, insertWithHooks} from "@lyrasearch/lyra"
+import {create, insert, search} from "@lyrasearch/lyra"
 import {formatNanoseconds, getNanosecondsTime} from "@lyrasearch/lyra/dist/cjs/src/utils"
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -22,7 +22,7 @@ cache.define("search", {}, async (term: string) => {
 })
 
 async function main() {
-  for (const _ of Array(100000).keys()) {
+  for (const _ of Array(10000).keys()) {
     insert(db, {
       author: "John Doe",
       quote: `Hello World! ${_}`
@@ -52,18 +52,18 @@ async function main() {
 
   await sleep(4000)
 
+  const startTimeAfterTTL = getNanosecondsTime()
+  const fetchAfterTTL = await cache.search("Hello")
+  console.log({
+    elapsedTimeAfterTTL: formatNanoseconds(getNanosecondsTime() - startTimeAfterTTL),
+    fetchAfterTTL
+  })
+
   const startTimeCachedAfterTTL = getNanosecondsTime()
   const fetchCachedAfterTTL = await cache.search("Hello")
   console.log({
     elapsedTimeCachedAfterTTL: formatNanoseconds(getNanosecondsTime() - startTimeCachedAfterTTL),
     fetchCachedAfterTTL
-  })
-
-  const startTimeCachedAfterTTL2 = getNanosecondsTime()
-  const fetchCachedAfterTTL2 = await cache.search("Hello")
-  console.log({
-    elapsedTimeCachedAfterTTL2: formatNanoseconds(getNanosecondsTime() - startTimeCachedAfterTTL2),
-    fetchCachedAfterTTL2
   })
 }
 
