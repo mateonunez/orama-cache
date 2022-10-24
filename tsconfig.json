@@ -15,9 +15,13 @@
     "sourceMap": true,
     "moduleResolution": "node",
     "typeRoots": [
-      "node_modules/@types",
-      "src/types"
+      "node_modules/@types"
     ],
+    "paths": {
+      "async-cache-dedupe": [
+        "./src/types/index.d.ts"
+      ],
+    }
   },
   "include": [
     "src/**/*"
