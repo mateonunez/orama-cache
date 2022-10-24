@@ -1,7 +1,7 @@
 {
   "name": "@mateonunez/lyra-cache",
   "version": "0.0.1-alpha.0",
-  "description": "Create your Lyra's schema following the official specification",
+  "description": "A simple cache library for Lyra's searches",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
