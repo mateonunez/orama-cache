@@ -29,3 +29,16 @@ test("errors", async ({ test }) => {
     throws(() => searchCache({ db: create({ schema: {} }) }), /term is required/)
   })
 })
+
+test("should cache results with multiple Lyra instances", async ({ equal, same }) => {
+  const db1 = create({ schema: { name: "string" } })
+  const db2 = create({ schema: { description: "string" } })
+  insert(db1, { name: "foo" })
+  insert(db2, { description: "foo" })
+
+  const results1 = await searchCache({ db: db1, term: "foo" })
+  const results2 = await searchCache({ db: db2, term: "foo" })
+
+  equal(results1.count, 1)
+  equal(results1.count, results2.count)
+})
