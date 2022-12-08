@@ -1,6 +1,6 @@
 {
   "name": "@mateonunez/lyra-cache",
-  "version": "0.0.1-beta.0",
+  "version": "0.0.1-beta.1",
   "description": "A simple cache library for Lyra's searches",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
