@@ -19,12 +19,13 @@
   ],
   "scripts": {
     "format": "prettier --write \"src/**/*.{ts,js}\"",
-    "lint": "npm run format && eslint . --ext .js,.ts",
-    "test": "c8 -c ./src/tests/config/c8.json tap --rcfile=./src/tests/config/tap.yml ./src/tests/**/*.test.ts",
+    "lint": "npm run format && eslint . --ext .js,.ts --ignore-path .gitignore",
+    "test": "npm run lint && c8 -c ./src/tests/config/c8.json tap --rcfile=./src/tests/config/tap.yml ./src/tests/**/*.test.ts",
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "build:esm": "tsc --project tsconfig.esm.json",
     "build:browser": "esbuild --bundle --sourcemap --target=es2019 --format=esm --outfile=./dist/client/index.js ./src/index.ts",
     "build": "rimraf ./dist && npm run build:esm && npm run build:cjs && npm run build:browser",
+    "prepare": "husky install",
     "start": "ts-node --files ./src/index.ts"
   },
   "keywords": [
@@ -51,6 +52,7 @@
     "c8": "^7.12.0",
     "esbuild": "^0.16.2",
     "eslint": "^8.29.0",
+    "husky": "^8.0.2",
     "prettier": "^2.8.1",
     "rimraf": "^3.0.2",
     "tap": "^16.3.2",
