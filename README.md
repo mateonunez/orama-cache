@@ -23,7 +23,7 @@ pnpm add @mateonunez/lyra-cache
 
 ```js
 import { create, insert } from "@lyrasearch/lyra"
-import { searchCache } from "@mateonunez/lyra-cache"
+import { createLyraCache, searchCache } from "@mateonunez/lyra-cache"
 
 (async() => {
   const db = create({ schema: { name: "string" } })
@@ -35,8 +35,28 @@ import { searchCache } from "@mateonunez/lyra-cache"
 
   // The next same search will be cached
 
-  const resultsCached = await searchCache({ db, term: "foo" }) // performed x2000 times faster via cache
+  const lyraCache = createLyraCache() // create a cache instance
+  const resultsCached = await searchCache({ db, term: "foo" }, lyraCache) // performed x2000 times faster via cache
 })()
+```
+
+## The Lyra Cache object
+
+The Lyra Cache object is a [async-cache-dedupe](https://github.com/mcollina/async-cache-dedupe) wrapper. It means that you can use all the methods that the original package provides. Same for the options.
+
+> Example using Redis as storage
+```js
+const lyraCache = createLyraCache({
+  storage: {
+    type: 'redis',
+    options: {
+      client: new Redis(),
+      invalidation: {
+        referencesTTL: 60 // seconds
+      }
+    }
+  }
+})
 ```
 
 ## Example
