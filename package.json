@@ -1,7 +1,7 @@
 {
   "name": "@mateonunez/lyra-cache",
   "version": "0.1.0",
-  "description": "A simple cache library for Lyra's searches",
+  "description": "Implement the cache dedupe on your Lyra instances",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",

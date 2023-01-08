@@ -1,6 +1,6 @@
 # Lyra cache
 
-Cache your [Lyra](https://github.com/lyrasearch/lyra) searches using [async-cache-dedupe](https://github.com/mcollina/async-cache-dedupe).
+Implement the cache dedupe on your [Lyra](https://github.com/lyrasearch/lyra) instances.
 
 [![Tests](https://github.com/mateonunez/lyra-cache/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mateonunez/lyra-cache/actions/workflows/ci.yml)
 
