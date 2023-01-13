@@ -40,7 +40,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@lyrasearch/lyra": "^0.3.1",
+    "@lyrasearch/lyra": "^0.4.1",
     "async-cache-dedupe": "^1.6.0"
   },
   "devDependencies": {
