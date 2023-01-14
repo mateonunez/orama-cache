@@ -41,7 +41,7 @@
   "license": "MIT",
   "dependencies": {
     "@lyrasearch/lyra": "^0.4.1",
-    "async-cache-dedupe": "^1.6.0"
+    "async-cache-dedupe": "^1.7.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

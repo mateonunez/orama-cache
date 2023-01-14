@@ -14,7 +14,8 @@ export async function createLyraCache(cacheOptions?: CacheOptions) {
     ...cacheOptions
   }
 
-  const cache = createAsynCacheDedupe(options)
+  const cache = createAsynCacheDedupe(options) as Cache & LyraCache
+
   cache.define("search", {}, async <S extends PropertiesSchema>({db, term}: SearchCacheOptions<S>) => {
     return await search(db, {term})
   })
