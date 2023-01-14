@@ -1,7 +1,7 @@
 {
   "name": "@mateonunez/lyra-cache",
   "version": "0.1.0",
-  "description": "A simple cache library for Lyra's searches",
+  "description": "Implement the cache dedupe on your Lyra instances",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
@@ -40,7 +40,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@lyrasearch/lyra": "^0.3.1",
+    "@lyrasearch/lyra": "^0.4.1",
     "async-cache-dedupe": "^1.6.0"
   },
   "devDependencies": {
