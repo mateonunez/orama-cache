@@ -31,12 +31,13 @@ import { createLyraCache, searchCache } from "@mateonunez/lyra-cache"
   await insert(db, { name: "foo" })
   await insert(db, { name: "bar" })
 
-  const results = await searchCache({ db, term: "foo" }) // native Lyra search
-
-  // The next same search will be cached
-
   const lyraCache = await createLyraCache() // create a cache instance
-  const resultsCached = await searchCache({ db, term: "foo" }, lyraCache) // performed x2000 times faster via cache
+
+  const results = await searchCache({ db, term: "foo" }, lyraCache)
+
+  // ...
+
+  const resultsCached = await searchCache({ db, term: "foo" }, lyraCache) // performed faster via cache
 })()
 ```
 
