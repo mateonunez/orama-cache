@@ -1,6 +1,6 @@
 import type {SearchResult, SearchParams} from "@lyrasearch/lyra/dist/methods/search"
 
-type OptionsMemory = {
+export type OptionsMemory = {
   size: number
   invalidation?: boolean
   log?: object
@@ -11,7 +11,7 @@ type OptionsRedis = {
   invalidation?:
     | boolean
     | {
-        invaledate: boolean
+        invalidate: boolean
         referencesTTL?: number
       }
   log?: object
@@ -28,8 +28,18 @@ export type CreateCacheOptions = {
   onDedupe?: (...args) => void
   onError?: (...args) => void
   onHit?: (key: string) => void
-  onMiss?: (...args) => void
+  onMiss?: (key: string) => void
   storage?: StorageOptions
+}
+
+export type ValidatedCacheOptions = {
+  ttl: number
+  stale?: number
+  onDedupe?: (...args) => void
+  onError?: (...args) => void
+  onHit?: (key: string) => void
+  onMiss?: (key: string) => void
+  storage: StorageOptions
 }
 
 declare module "async-cache-dedupe" {
