@@ -23,7 +23,7 @@ pnpm add @mateonunez/lyra-cache
 
 ```js
 import { create, insert } from "@lyrasearch/lyra"
-import { createLyraCache, searchCache } from "@mateonunez/lyra-cache"
+import { createLyraCache } from "@mateonunez/lyra-cache"
 
 (async() => {
   const db = create({ schema: { name: "string" } })
@@ -31,14 +31,15 @@ import { createLyraCache, searchCache } from "@mateonunez/lyra-cache"
   await insert(db, { name: "foo" })
   await insert(db, { name: "bar" })
 
-  const lyraCache = await createLyraCache() // create a cache instance
+  const cache = await createLyraCache(db) // create a cache instance
 
-  const results = await searchCache({ db, term: "foo" }, lyraCache)
+  const results = await cache.search({ term: "foo" }) // it will return the results and cache them
 
   // ...
 
-  const resultsCached = await searchCache({ db, term: "foo" }, lyraCache) // performed faster via cache
+  const cachedResults = await cache.search({ term: "foo" }) // it will return the cached results
 })()
+
 ```
 
 ## The Lyra Cache object
@@ -53,6 +54,7 @@ const lyraCache = createLyraCache({
     options: {
       client: new Redis(),
       invalidation: {
+        invalidates: true,
         referencesTTL: 60 // seconds
       }
     }
