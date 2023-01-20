@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {create, insert} from "@lyrasearch/lyra"
 import {createLyraCache} from ".."
 import {test} from "tap"
