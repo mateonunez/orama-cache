@@ -1,20 +1,42 @@
-declare module "async-cache-dedupe" {
-  export type StorageOptions = {
-    type: "memory" | "redis"
-  }
+import type {SearchResult, SearchParams} from "@lyrasearch/lyra/dist/methods/search"
 
-  export type Options = {
-    ttl?: number
-    serialize?: (...args) => string
-    onDedupe?: (...args) => void
-    onError?: (...args) => void
-    onHit?: (...args) => void
-    onMiss?: (...args) => void
-    storage?: StorageOptions
-    references?: (args, key, result) => string[] | boolean
-  }
-  export function createCache(options: Options): {
-    define: <T>(key: string, options?: Options, fn: (...args) => Promise<T>) => Promise<T>
-    [key: string]: <T>(...args) => Promise<T>
+type OptionsMemory = {
+  size: number
+  invalidation?: boolean
+  log?: object
+}
+
+type OptionsRedis = {
+  client: object
+  invalidation?:
+    | boolean
+    | {
+        invaledate: boolean
+        referencesTTL?: number
+      }
+  log?: object
+}
+
+type StorageOptions = {
+  type: "memory" | "redis"
+  options?: OptionsMemory | OptionsRedis
+}
+
+export type CreateCacheOptions = {
+  ttl?: number
+  stale?: number
+  onDedupe?: (...args) => void
+  onError?: (...args) => void
+  onHit?: (key: string) => void
+  onMiss?: (...args) => void
+  storage?: StorageOptions
+}
+
+declare module "async-cache-dedupe" {
+  export function createCache<T>(options: CreateCacheOptions): {
+    define: (key: string, options?: Options, fn: (...args) => Promise<T>) => Promise<T>
+    clear: () => void
+
+    search: (params: SearchParams<T>) => Promise<SearchResult<T>>
   }
 }

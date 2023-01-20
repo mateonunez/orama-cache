@@ -4,8 +4,9 @@
     "module": "CommonJS",
     "lib": [
       "ESNext",
-      "DOM"
+      "DOM",
     ],
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
@@ -13,10 +14,6 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "moduleResolution": "node",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
     "paths": {
       "async-cache-dedupe": [
         "./src/types/index.d.ts"
