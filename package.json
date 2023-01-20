@@ -1,6 +1,6 @@
 {
-  "name": "@mateonunez/lyra-cache",
-  "version": "0.2.0",
+  "name": "lyra-cache",
+  "version": "0.3.0",
   "description": "Implement the cache dedupe on your Lyra instances",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
