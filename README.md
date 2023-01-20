@@ -10,13 +10,13 @@ Implement the cache dedupe on your [Lyra](https://github.com/lyrasearch/lyra) in
 You can install Lyra using `npm`, `yarn`, `pnpm`:
 
 ```sh
-npm i @mateonunez/lyra-cache
+npm i lyra-cache
 ```
 ```sh
-yarn add @mateonunez/lyra-cache
+yarn add lyra-cache
 ```
 ```sh
-pnpm add @mateonunez/lyra-cache
+pnpm add lyra-cache
 ```
 
 ## Usage
