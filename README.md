@@ -23,7 +23,7 @@ pnpm add lyra-cache
 
 ```js
 import { create, insert } from "@lyrasearch/lyra"
-import { createLyraCache } from "@mateonunez/lyra-cache"
+import { createLyraCache } from "lyra-cache"
 
 (async() => {
   const db = create({ schema: { name: "string" } })
