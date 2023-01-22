@@ -1,25 +1,21 @@
-# Lyra cache
+# ✨💨 Lyra Cache
 
-Implement the cache dedupe on your [Lyra](https://github.com/lyrasearch/lyra) instances.
+This plugin provides a cache system for [Lyra](https://github.com/lyrasearch/lyra). The cache system is based on [async-cache-dedupe](https://github.com/mcollina/async-cache-dedupe).
 
 [![Tests](https://github.com/mateonunez/lyra-cache/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mateonunez/lyra-cache/actions/workflows/ci.yml)
 
+## 🚀 Getting Started
 
-## Installation
+### 📦 Installation
 
-You can install Lyra using `npm`, `yarn`, `pnpm`:
-
-```sh
-npm i lyra-cache
-```
-```sh
-yarn add lyra-cache
-```
-```sh
-pnpm add lyra-cache
+```bash
+# You can install Lyra using `npm`, `yarn`, `pnpm`:
+npm install lyra-cache
 ```
 
-## Usage
+### 📝 Usage
+
+> Example using the default storage (memory)
 
 ```js
 import { create, insert } from "@lyrasearch/lyra"
@@ -31,20 +27,20 @@ import { createLyraCache } from "lyra-cache"
   await insert(db, { name: "foo" })
   await insert(db, { name: "bar" })
 
-  const cache = await createLyraCache(db) // create a cache instance
+  const cache = await createLyraCache(db) // Create the cache.
 
-  const results = await cache.search({ term: "foo" }) // it will return the results and cache them
+  const results = await cache.search({ term: "foo" }) // This method will return the results and cache them.
 
   // ...
 
-  const cachedResults = await cache.search({ term: "foo" }) // it will return the cached results
+  const cachedResults = await cache.search({ term: "foo" }) // Returns the cached results.
 })()
 
 ```
 
-## The Lyra Cache object
+## 📖 Documentation
 
-The Lyra Cache object is a [async-cache-dedupe](https://github.com/mcollina/async-cache-dedupe) wrapper. It means that you can use all the methods that the original package provides. Same for the options.
+You can use the same APIs as [async-cache-dedupe](https://github.com/mcollina/async-cache-dedupe#api).
 
 > Example using Redis as storage
 ```js
@@ -62,7 +58,7 @@ const lyraCache = createLyraCache({
 })
 ```
 
-## Example
+## 📈 Benchmarks
 
 Some searches can be ~2K faster using a cache system.
 
@@ -98,6 +94,6 @@ Some searches can be ~2K faster using a cache system.
 }
 ```
 
-# License
+## 📝 License
 
 [MIT](/LICENSE)
