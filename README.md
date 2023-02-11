@@ -126,6 +126,20 @@ npm run benchmark
 ╚═════════════════════════════════════╧═════════╧══════════════════╧═══════════╧═════════════════════════╝
 ```
 
+## ⚠️ Testing
+
+To run the tests you should run the following commands:
+
+```bash
+npm run redis
+```
+
+That command shall start a new Redis istance using Docker. Then run the tests.
+
+```bash
+npm run tests
+```
+
 ## 📝 License
 
 [MIT](/LICENSE)
