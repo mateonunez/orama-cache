@@ -2,12 +2,13 @@ import {create, insert} from "@lyrasearch/lyra"
 import {createLyraCache} from ".."
 import {test} from "tap"
 import {promisify} from "util"
-
 const sleep = promisify(setTimeout)
 
+const searchable = {term: "foo", relevance: {k: 0, b: 0, d: 0}}
+
 test("cache", async ({test}) => {
-  test("should cache search results", async ({plan, same}) => {
-    plan(2)
+  test("should cache search results", async t => {
+    t.plan(2)
 
     const db = await create({schema: {name: "string"}})
     const cache = await createLyraCache(db)
@@ -17,15 +18,15 @@ test("cache", async ({test}) => {
     const results1 = await cache.search({term: "foo"})
     const resultsCached = await cache.search({term: "foo"})
 
-    same(results1, resultsCached)
+    t.equal(results1, resultsCached)
 
     const results2 = await cache.search({term: "bar"})
-    same(results2.count, 1)
+    t.equal(results2.count, 1)
   })
 })
 
-test("should cache results with multiple Lyra instances", async ({plan, same}) => {
-  plan(2)
+test("should cache results with multiple Lyra instances", async t => {
+  t.plan(2)
 
   const db1 = await create({schema: {name: "string"}})
   const db2 = await create({schema: {description: "string"}})
@@ -39,18 +40,17 @@ test("should cache results with multiple Lyra instances", async ({plan, same}) =
   const results1 = await cache.search({term: "foo"})
   const results2 = await cache2.search({term: "foo"})
 
-  same(results1.count, 1)
-  same(results1.count, results2.count)
+  t.equal(results1.count, 1)
+  t.equal(results1.count, results2.count)
 })
 
-test("should hit a cached key", async ({plan, same}) => {
-  plan(1)
+test("should hit a cached key", async t => {
+  t.plan(1)
 
   const db = await create({schema: {name: "string"}})
-  const searchable = {term: "foo"}
 
   const cache = await createLyraCache(db, {
-    onHit: (key: string) => same(key, JSON.stringify(searchable))
+    onHit: (key: string) => t.same(JSON.parse(key), searchable)
   })
 
   await insert(db, {name: "foo"})
@@ -58,27 +58,27 @@ test("should hit a cached key", async ({plan, same}) => {
   await cache.search(searchable)
 })
 
-test("should miss a cached key", async ({plan, same}) => {
-  plan(1)
+test("should miss a cached key", async t => {
+  t.plan(1)
 
   const db = await create({schema: {name: "string"}})
-  const searchable = {term: "foo"}
 
   const cache = await createLyraCache(db, {
-    onMiss: (key: string) => same(key, JSON.stringify(searchable))
+    onMiss: (key: string) => t.same(JSON.parse(key), searchable)
   })
 
   await insert(db, {name: "foo"})
   await cache.search(searchable)
 })
 
-test("ttl should expire a cached key", async ({same}) => {
+test("ttl should expire a cached key", async t => {
+  t.plan(2)
+
   const db = await create({schema: {name: "string"}})
-  const searchable = {term: "foo"}
 
   const cache = await createLyraCache(db, {
     ttl: 1,
-    onMiss: (key: string) => same(key, JSON.stringify(searchable))
+    onMiss: (key: string) => t.same(JSON.parse(key), searchable)
   })
 
   await insert(db, {name: "foo"})
@@ -89,12 +89,13 @@ test("ttl should expire a cached key", async ({same}) => {
   await cache.search(searchable)
 })
 
-test("clear should clear the cache", async ({same}) => {
+test("clear should clear the cache", async t => {
+  t.plan(2)
+
   const db = await create({schema: {name: "string"}})
-  const searchable = {term: "foo"}
 
   const cache = await createLyraCache(db, {
-    onMiss: (key: string) => same(key, JSON.stringify(searchable))
+    onMiss: (key: string) => t.same(JSON.parse(key), searchable)
   })
 
   await insert(db, {name: "foo"})
