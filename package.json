@@ -26,7 +26,8 @@
     "build:browser": "esbuild --bundle --sourcemap --target=es2019 --format=esm --outfile=./dist/client/index.js ./src/index.ts",
     "build": "rimraf ./dist && npm run build:esm && npm run build:cjs && npm run build:browser",
     "prepare": "husky install",
-    "benchmark": "node --no-warnings ./benchmark/lyra-cache.mjs"
+    "benchmark": "node --no-warnings ./benchmark/lyra-cache.mjs",
+    "redis": "docker run --rm -p 6379:6379 redis redis-server"
   },
   "keywords": [
     "lyra",
@@ -53,6 +54,7 @@
     "esbuild": "^0.17.7",
     "eslint": "^8.34.0",
     "husky": "^8.0.3",
+    "ioredis": "^5.3.0",
     "prettier": "^2.8.4",
     "rimraf": "^4.1.2",
     "tap": "^16.3.4",
