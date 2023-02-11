@@ -141,8 +141,8 @@ test("should validate storage", async () => {
       test("should throw if client is not an object", async ({plan, throws}) => {
         plan(1)
 
-        // @ts-expect-error - client is an object
-        const options = {storage: {type: "redis", options: {client: "foo"}}} as CreateCacheOptions
+        // @ts-expect-error - client is not defined
+        const options = {storage: {type: "redis", options: {client: undefined}}} as CreateCacheOptions
         throws(() => {
           validateOptions(options)
         }, "storage.options.client is required")

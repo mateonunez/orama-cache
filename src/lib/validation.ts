@@ -56,7 +56,11 @@ export function validateOptions(options: CreateCacheOptions): ValidatedCacheOpti
       const optionsRedis = options.storage.options as OptionsRedis
 
       if (optionsRedis) {
-        if (typeof optionsRedis.invalidation === "object") {
+        if (!optionsRedis.client || (optionsRedis.client && typeof optionsRedis.client !== "object")) {
+          throw new Error("storage.options.client is required")
+        }
+
+        if (optionsRedis.invalidation && typeof optionsRedis.invalidation === "object") {
           if (typeof optionsRedis.invalidation.invalidate !== "boolean") {
             throw new Error("storage.options.invalidation.invalidate must be a boolean")
           }
@@ -64,8 +68,6 @@ export function validateOptions(options: CreateCacheOptions): ValidatedCacheOpti
           if (typeof optionsRedis.invalidation.referencesTTL === "number" && optionsRedis.invalidation.referencesTTL < 0) {
             throw new Error("storage.options.invalidation.referencesTTL must be greater than 0")
           }
-        } else {
-          throw new Error("storage.options.invalidation must be an object")
         }
       } else {
         throw new Error("storage.options must be defined")
