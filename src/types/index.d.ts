@@ -1,4 +1,4 @@
-import type {SearchResult, SearchParams} from "@lyrasearch/lyra/dist/methods/search"
+import type {SearchResult, SearchParams} from "@orama/orama/dist/methods/search"
 
 export type OptionsMemory = {
   size: number

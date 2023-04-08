@@ -6,14 +6,14 @@ import type {CreateCacheOptions} from "async-cache-dedupe"
 import type {Orama, Results, SearchParams} from "@orama/orama"
 
 export async function createOramaCache(db: Orama, cacheOptions: CreateCacheOptions = {ttl: 60, storage: {type: "memory"}}) {
-  async function searchLyra(params: SearchParams): Promise<Results> {
+  async function searchOrama(params: SearchParams): Promise<Results> {
     return search(db, params)
   }
 
   const options = validateOptions(cacheOptions)
   const cache = createAsynCacheDedupe(options)
 
-  cache.define("search", {}, searchLyra)
+  cache.define("search", {}, searchOrama)
 
   return cache
 }

@@ -14,7 +14,7 @@ teardown(async () => {
   await redisClient.quit()
 })
 
-test("lyra cache with redis storage", async t => {
+test("orama cache with redis storage", async t => {
   t.plan(1)
 
   const db = await create({schema: {name: "string"}})

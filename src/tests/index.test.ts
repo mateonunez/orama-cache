@@ -25,7 +25,7 @@ test("cache", async ({test}) => {
   })
 })
 
-test("should cache results with multiple Lyra instances", async t => {
+test("should cache results with multiple Orama instances", async t => {
   t.plan(2)
 
   const db1 = await create({schema: {name: "string"}})
