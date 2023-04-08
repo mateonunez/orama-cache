@@ -1,6 +1,6 @@
 # ✨💨 Orama Cache
 
-This plugin provides a cache system for [Orama](https://github.com/orama/orama). The cache system is based on [async-cache-dedupe](https://github.com/mcollina/async-cache-dedupe).
+This plugin provides a cache system for [Orama](https://github.com/oramasearch/orama). The cache system is based on [async-cache-dedupe](https://github.com/mcollina/async-cache-dedupe).
 
 [![Tests](https://github.com/mateonunez/orama-cache/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mateonunez/orama-cache/actions/workflows/ci.yml)
 
