@@ -1,7 +1,7 @@
-import {create, insert} from "@lyrasearch/lyra"
-import {createLyraCache} from ".."
 import {test} from "tap"
 import {promisify} from "util"
+import {create, insert} from "@orama/orama"
+import {createOramaCache} from ".."
 const sleep = promisify(setTimeout)
 
 const searchable = {term: "foo", relevance: {k: 0, b: 0, d: 0}}
@@ -11,7 +11,7 @@ test("cache", async ({test}) => {
     t.plan(2)
 
     const db = await create({schema: {name: "string"}})
-    const cache = await createLyraCache(db)
+    const cache = await createOramaCache(db)
     await insert(db, {name: "foo"})
     await insert(db, {name: "bar"})
 
@@ -31,8 +31,8 @@ test("should cache results with multiple Lyra instances", async t => {
   const db1 = await create({schema: {name: "string"}})
   const db2 = await create({schema: {description: "string"}})
 
-  const cache = await createLyraCache(db1)
-  const cache2 = await createLyraCache(db2)
+  const cache = await createOramaCache(db1)
+  const cache2 = await createOramaCache(db2)
 
   await insert(db1, {name: "foo"})
   await insert(db2, {description: "foo"})
@@ -49,11 +49,12 @@ test("should hit a cached key", async t => {
 
   const db = await create({schema: {name: "string"}})
 
-  const cache = await createLyraCache(db, {
+  const cache = await createOramaCache(db, {
     onHit: (key: string) => t.same(JSON.parse(key), searchable)
   })
 
   await insert(db, {name: "foo"})
+  await cache.search(searchable)
   await cache.search(searchable)
   await cache.search(searchable)
 })
@@ -63,7 +64,7 @@ test("should miss a cached key", async t => {
 
   const db = await create({schema: {name: "string"}})
 
-  const cache = await createLyraCache(db, {
+  const cache = await createOramaCache(db, {
     onMiss: (key: string) => t.same(JSON.parse(key), searchable)
   })
 
@@ -76,7 +77,7 @@ test("ttl should expire a cached key", async t => {
 
   const db = await create({schema: {name: "string"}})
 
-  const cache = await createLyraCache(db, {
+  const cache = await createOramaCache(db, {
     ttl: 1,
     onMiss: (key: string) => t.same(JSON.parse(key), searchable)
   })
@@ -94,7 +95,7 @@ test("clear should clear the cache", async t => {
 
   const db = await create({schema: {name: "string"}})
 
-  const cache = await createLyraCache(db, {
+  const cache = await createOramaCache(db, {
     onMiss: (key: string) => t.same(JSON.parse(key), searchable)
   })
 

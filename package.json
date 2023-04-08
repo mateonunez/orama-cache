@@ -1,5 +1,5 @@
 {
-  "name": "lyra-cache",
+  "name": "orama-cache",
   "version": "0.4.0",
   "description": "Implement the cache dedupe on your Lyra instances",
   "main": "./dist/cjs/index.js",
@@ -41,7 +41,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@lyrasearch/lyra": "^0.4.6",
+    "@orama/orama": "1.0.0-beta.8",
     "async-cache-dedupe": "^1.9.0"
   },
   "devDependencies": {
