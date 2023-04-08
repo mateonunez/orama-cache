@@ -1,6 +1,6 @@
 import cronometro from "cronometro"
-import {create, insertBatch, search} from "@lyrasearch/lyra"
-import {createLyraCache} from "../dist/cjs/index.js"
+import {create, insertMultiple, search} from "@orama/orama"
+import {createOramaCache} from "../dist/cjs/index.js"
 import events from "./dataset/events.mjs"
 
 const db = await create({
@@ -15,9 +15,9 @@ const db = await create({
 })
 
 const eventsSliced = events.slice(0, 30_000)
-insertBatch(db, eventsSliced)
+insertMultiple(db, eventsSliced)
 
-const cache = await createLyraCache(db)
+const cache = await createOramaCache(db)
 
 const cronometroOptions = {
   iterations: 30_000,
@@ -29,10 +29,10 @@ const cronometroOptions = {
 
 cronometro(
   {
-    "Lyra search": async () => {
+    "Orama search": async () => {
       await search(db, {term: "first"})
     },
-    "Lyra caching search": async () => {
+    "Orama caching search": async () => {
       await cache.search({term: "first"})
     }
   },
@@ -41,13 +41,13 @@ cronometro(
 
 cronometro(
   {
-    "Lyra search with properties": async () => {
+    "Orama search with properties": async () => {
       await search(db, {
         term: "b",
         properties: ["description"]
       })
     },
-    "Lyra caching search with properties": async () => {
+    "Orama caching search with properties": async () => {
       await cache.search({
         term: "b",
         properties: ["description"]

@@ -1,6 +1,7 @@
-import {create, insert} from "@lyrasearch/lyra"
-import {createLyraCache} from ".."
 import {test, before, teardown} from "tap"
+
+import {create, insert} from "@orama/orama"
+import {createOramaCache} from ".."
 import Redis from "ioredis"
 
 const redisClient = new Redis()
@@ -13,11 +14,11 @@ teardown(async () => {
   await redisClient.quit()
 })
 
-test("lyra cache with redis storage", async t => {
+test("orama cache with redis storage", async t => {
   t.plan(1)
 
   const db = await create({schema: {name: "string"}})
-  const cache = await createLyraCache(db, {
+  const cache = await createOramaCache(db, {
     storage: {
       type: "redis",
       options: {
