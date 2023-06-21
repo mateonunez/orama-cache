@@ -41,7 +41,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@orama/orama": "1.0.0",
+    "@orama/orama": "1.0.3",
     "async-cache-dedupe": "^1.10.2"
   },
   "devDependencies": {
