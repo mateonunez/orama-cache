@@ -6,6 +6,7 @@
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
   "browser": "./dist/client/index.js",
+  "type": "module",
   "homepage": "https://github.com/mateonunez/orama-cache#readme",
   "repository": {
     "type": "git",

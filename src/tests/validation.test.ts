@@ -1,6 +1,6 @@
 import {CreateCacheOptions, OptionsMemory, ValidatedCacheOptions} from "async-cache-dedupe"
 import {test} from "tap"
-import {validateOptions} from "../lib/validation"
+import {validateOptions} from "../lib/validation.js"
 
 test("should validate ttl", ({plan, throws}) => {
   plan(1)

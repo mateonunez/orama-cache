@@ -1,14 +1,10 @@
-import {test, before, teardown} from "tap"
+import {test, teardown} from "tap"
 
 import {create, insert} from "@orama/orama"
-import {createOramaCache} from ".."
+import {createOramaCache} from "../index.js"
 import Redis from "ioredis"
 
 const redisClient = new Redis()
-
-before(async () => {
-  await redisClient.flushall()
-})
 
 teardown(async () => {
   await redisClient.quit()

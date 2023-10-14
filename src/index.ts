@@ -1,6 +1,6 @@
 import {createCache as createAsynCacheDedupe} from "async-cache-dedupe"
 import {search} from "@orama/orama"
-import {validateOptions} from "./lib/validation"
+import {validateOptions} from "./lib/validation.js"
 
 import type {CreateCacheOptions} from "async-cache-dedupe"
 import type {Orama, Results, SearchParams} from "@orama/orama"

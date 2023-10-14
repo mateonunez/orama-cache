@@ -1,7 +1,7 @@
 import {test} from "tap"
 import {promisify} from "util"
 import {create, insert} from "@orama/orama"
-import {createOramaCache} from ".."
+import {createOramaCache} from "../index.js"
 const sleep = promisify(setTimeout)
 
 const searchable = {term: "foo", relevance: {k: 0, b: 0, d: 0}}

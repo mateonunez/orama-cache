@@ -3,6 +3,10 @@
   "include": [
     "src/**/*.ts"
   ],
+  "exclude": [
+    "node_modules",
+    "src/**/*.test.ts"
+  ],
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
