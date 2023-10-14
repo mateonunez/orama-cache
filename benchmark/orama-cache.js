@@ -1,6 +1,6 @@
 import cronometro from "cronometro"
 import {create, insertMultiple, search} from "@orama/orama"
-import {createOramaCache} from "../dist/cjs/index.js"
+import {createOramaCache} from "../dist/esm/index.js"
 import events from "./dataset/events.mjs"
 
 const db = await create({

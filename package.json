@@ -27,7 +27,7 @@
     "build:browser": "esbuild --bundle --sourcemap --target=es2019 --format=esm --outfile=./dist/client/index.js ./src/index.ts",
     "build": "rimraf ./dist && npm run build:esm && npm run build:cjs && npm run build:browser",
     "prepare": "husky install",
-    "benchmark": "node --no-warnings ./benchmark/orama-cache.mjs",
+    "benchmark": "node --no-warnings ./benchmark/orama-cache.js",
     "redis": "docker run --rm -p 6379:6379 redis redis-server"
   },
   "keywords": [
