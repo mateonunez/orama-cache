@@ -17,7 +17,10 @@ teardown(async () => {
 test("orama cache with redis storage", async t => {
   t.plan(1)
 
-  const db = await create({schema: {name: "string"}})
+  const db = await create({
+    schema: {name: "string"}
+  })
+
   const cache = await createOramaCache(db, {
     storage: {
       type: "redis",
@@ -27,8 +30,7 @@ test("orama cache with redis storage", async t => {
     }
   })
 
-  await insert(db, {name: "foo"})
-  await insert(db, {name: "bar"})
+  await insert(db, {name: "foo"} as never)
 
   const results = await cache.search({term: "foo"})
   const resultsCached = await cache.search({term: "foo"})
