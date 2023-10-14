@@ -1,7 +1,7 @@
 import {test} from "tap"
 import {promisify} from "util"
 import {create, insert} from "@orama/orama"
-import {createOramaCache} from ".."
+import {createOramaCache} from "../index.js"
 const sleep = promisify(setTimeout)
 
 const searchable = {term: "foo", relevance: {k: 0, b: 0, d: 0}}
@@ -12,8 +12,8 @@ test("cache", async ({test}) => {
 
     const db = await create({schema: {name: "string"}})
     const cache = await createOramaCache(db)
-    await insert(db, {name: "foo"})
-    await insert(db, {name: "bar"})
+    await insert(db, {name: "foo"} as never)
+    await insert(db, {name: "bar"} as never)
 
     const results1 = await cache.search({term: "foo"})
     const resultsCached = await cache.search({term: "foo"})
@@ -34,8 +34,8 @@ test("should cache results with multiple Orama instances", async t => {
   const cache = await createOramaCache(db1)
   const cache2 = await createOramaCache(db2)
 
-  await insert(db1, {name: "foo"})
-  await insert(db2, {description: "foo"})
+  await insert(db1, {name: "foo"} as never)
+  await insert(db2, {description: "foo"} as never)
 
   const results1 = await cache.search({term: "foo"})
   const results2 = await cache2.search({term: "foo"})
@@ -53,7 +53,7 @@ test("should hit a cached key", async t => {
     onHit: (key: string) => t.same(JSON.parse(key), searchable)
   })
 
-  await insert(db, {name: "foo"})
+  await insert(db, {name: "foo"} as never)
   await cache.search(searchable)
   await cache.search(searchable)
   await cache.search(searchable)
@@ -68,7 +68,7 @@ test("should miss a cached key", async t => {
     onMiss: (key: string) => t.same(JSON.parse(key), searchable)
   })
 
-  await insert(db, {name: "foo"})
+  await insert(db, {name: "foo"} as never)
   await cache.search(searchable)
 })
 
@@ -82,7 +82,7 @@ test("ttl should expire a cached key", async t => {
     onMiss: (key: string) => t.same(JSON.parse(key), searchable)
   })
 
-  await insert(db, {name: "foo"})
+  await insert(db, {name: "foo"} as never)
   await cache.search(searchable)
 
   await sleep(1500)
@@ -99,7 +99,7 @@ test("clear should clear the cache", async t => {
     onMiss: (key: string) => t.same(JSON.parse(key), searchable)
   })
 
-  await insert(db, {name: "foo"})
+  await insert(db, {name: "foo"} as never)
   await cache.search(searchable)
 
   cache.clear()
