@@ -41,7 +41,7 @@ test("should cache results with multiple Orama instances", async t => {
   const results2 = await cache2.search({term: "foo"})
 
   t.equal(results1.count, 1)
-  t.equal(results1.count, results2.count)
+  t.equal(results2.count, 1)
 })
 
 test("should hit a cached key", async t => {
@@ -50,13 +50,12 @@ test("should hit a cached key", async t => {
   const db = await create({schema: {name: "string"}})
 
   const cache = await createOramaCache(db, {
-    onHit: (key: string) => t.same(JSON.parse(key), searchable)
+    onHit: (key: string) => t.same(JSON.parse(key), {term: "foo"})
   })
 
   await insert(db, {name: "foo"} as never)
-  await cache.search(searchable)
-  await cache.search(searchable)
-  await cache.search(searchable)
+  await cache.search({term: "foo"})
+  await cache.search({term: "foo"})
 })
 
 test("should miss a cached key", async t => {
