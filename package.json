@@ -1,6 +1,6 @@
 {
   "name": "orama-cache",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Implement the cache dedupe on your Orama instances",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
