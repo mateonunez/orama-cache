@@ -9,11 +9,11 @@ const searchable = {term: "foo", relevance: {k: 0, b: 0, d: 0}}
 test("cache", async ({test}) => {
   test("should cache search results", async t => {
     t.plan(2)
-
-    const db = await create({schema: {name: "string"}})
+    const schema = {name: "string"} as const
+    const db = await create({schema})
     const cache = await createOramaCache(db)
-    await insert(db, {name: "foo"} as never)
-    await insert(db, {name: "bar"} as never)
+    await insert(db, {name: "foo"})
+    await insert(db, {name: "bar"})
 
     const results1 = await cache.search({term: "foo"})
     const resultsCached = await cache.search({term: "foo"})
@@ -28,14 +28,17 @@ test("cache", async ({test}) => {
 test("should cache results with multiple Orama instances", async t => {
   t.plan(2)
 
-  const db1 = await create({schema: {name: "string"}})
-  const db2 = await create({schema: {description: "string"}})
+  const schema = {name: "string"} as const
+  const schemaWithDescription = {description: "string"} as const
+
+  const db1 = await create({schema})
+  const db2 = await create({schema: schemaWithDescription})
 
   const cache = await createOramaCache(db1)
   const cache2 = await createOramaCache(db2)
 
-  await insert(db1, {name: "foo"} as never)
-  await insert(db2, {description: "foo"} as never)
+  await insert(db1, {name: "foo"})
+  await insert(db2, {description: "foo"})
 
   const results1 = await cache.search({term: "foo"})
   const results2 = await cache2.search({term: "foo"})
@@ -47,13 +50,15 @@ test("should cache results with multiple Orama instances", async t => {
 test("should hit a cached key", async t => {
   t.plan(1)
 
-  const db = await create({schema: {name: "string"}})
+  const schema = {name: "string"} as const
+
+  const db = await create({schema})
 
   const cache = await createOramaCache(db, {
     onHit: (key: string) => t.same(JSON.parse(key), {term: "foo"})
   })
 
-  await insert(db, {name: "foo"} as never)
+  await insert(db, {name: "foo"})
   await cache.search({term: "foo"})
   await cache.search({term: "foo"})
 })
@@ -61,27 +66,31 @@ test("should hit a cached key", async t => {
 test("should miss a cached key", async t => {
   t.plan(1)
 
-  const db = await create({schema: {name: "string"}})
+  const schema = {name: "string"} as const
+
+  const db = await create({schema})
 
   const cache = await createOramaCache(db, {
     onMiss: (key: string) => t.same(JSON.parse(key), searchable)
   })
 
-  await insert(db, {name: "foo"} as never)
+  await insert(db, {name: "foo"})
   await cache.search(searchable)
 })
 
 test("ttl should expire a cached key", async t => {
   t.plan(2)
 
-  const db = await create({schema: {name: "string"}})
+  const schema = {name: "string"} as const
+
+  const db = await create({schema})
 
   const cache = await createOramaCache(db, {
     ttl: 1,
     onMiss: (key: string) => t.same(JSON.parse(key), searchable)
   })
 
-  await insert(db, {name: "foo"} as never)
+  await insert(db, {name: "foo"})
   await cache.search(searchable)
 
   await sleep(1500)
@@ -92,13 +101,15 @@ test("ttl should expire a cached key", async t => {
 test("clear should clear the cache", async t => {
   t.plan(2)
 
-  const db = await create({schema: {name: "string"}})
+  const schema = {name: "string"} as const
+
+  const db = await create({schema})
 
   const cache = await createOramaCache(db, {
     onMiss: (key: string) => t.same(JSON.parse(key), searchable)
   })
 
-  await insert(db, {name: "foo"} as never)
+  await insert(db, {name: "foo"})
   await cache.search(searchable)
 
   cache.clear()
