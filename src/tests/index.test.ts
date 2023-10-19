@@ -1,118 +1,111 @@
-import {test} from "tap"
-import {promisify} from "util"
-import {create, insert} from "@orama/orama"
+import test from "node:test"
+import assert from "node:assert"
+import {promisify} from "node:util"
+import {create, insert, search} from "@orama/orama"
 import {createOramaCache} from "../index.js"
+
 const sleep = promisify(setTimeout)
 
-const searchable = {term: "foo", relevance: {k: 0, b: 0, d: 0}}
-
-test("cache", async ({test}) => {
-  test("should cache search results", async t => {
-    t.plan(2)
+test.describe("cache", async () => {
+  test.it("should cache results", async () => {
     const schema = {name: "string"} as const
     const db = await create({schema})
     const cache = await createOramaCache(db)
+
     await insert(db, {name: "foo"})
     await insert(db, {name: "bar"})
 
-    const results1 = await cache.search({term: "foo"})
-    const resultsCached = await cache.search({term: "foo"})
+    const resultsFromOrama = await search(db, {term: "foo"})
+    const resultsFromCache = await cache.search({term: "foo"})
+    const resultsCachedFromOrama = await cache.search({term: "foo"})
 
-    t.equal(results1, resultsCached)
-
-    const results2 = await cache.search({term: "bar"})
-    t.equal(results2.count, 1)
-  })
-})
-
-test("should cache results with multiple Orama instances", async t => {
-  t.plan(2)
-
-  const schema = {name: "string"} as const
-  const schemaWithDescription = {description: "string"} as const
-
-  const db1 = await create({schema})
-  const db2 = await create({schema: schemaWithDescription})
-
-  const cache = await createOramaCache(db1)
-  const cache2 = await createOramaCache(db2)
-
-  await insert(db1, {name: "foo"})
-  await insert(db2, {description: "foo"})
-
-  const results1 = await cache.search({term: "foo"})
-  const results2 = await cache2.search({term: "foo"})
-
-  t.equal(results1.count, 1)
-  t.equal(results2.count, 1)
-})
-
-test("should hit a cached key", async t => {
-  t.plan(1)
-
-  const schema = {name: "string"} as const
-
-  const db = await create({schema})
-
-  const cache = await createOramaCache(db, {
-    onHit: (key: string) => t.same(JSON.parse(key), {term: "foo"})
+    assert.strictEqual(resultsFromOrama.count, resultsFromCache.count)
+    assert.deepStrictEqual(resultsFromCache, resultsCachedFromOrama)
   })
 
-  await insert(db, {name: "foo"})
-  await cache.search({term: "foo"})
-  await cache.search({term: "foo"})
-})
+  test.it("should cache results with multiple Orama istances", async () => {
+    const schemaWithName = {name: "string"} as const
+    const schemaWithDescription = {description: "string"} as const
 
-test("should miss a cached key", async t => {
-  t.plan(1)
+    const dbWithName = await create({schema: schemaWithName})
+    const dbWithDescription = await create({schema: schemaWithDescription})
 
-  const schema = {name: "string"} as const
+    const cacheWithName = await createOramaCache(dbWithName)
+    const cacheWithDescription = await createOramaCache(dbWithDescription)
 
-  const db = await create({schema})
+    await insert(dbWithName, {name: "foo"})
+    await insert(dbWithDescription, {description: "bar"})
 
-  const cache = await createOramaCache(db, {
-    onMiss: (key: string) => t.same(JSON.parse(key), searchable)
+    const resultsWithName = await cacheWithName.search({term: "foo"})
+    const resultsWithDescription = await cacheWithDescription.search({term: "bar"})
+
+    assert.deepEqual(resultsWithName.count, 1)
+    assert.deepEqual(resultsWithDescription.count, 1)
   })
 
-  await insert(db, {name: "foo"})
-  await cache.search(searchable)
-})
+  test.it("should hit a cached key", async () => {
+    // test.plan(1)
 
-test("ttl should expire a cached key", async t => {
-  t.plan(2)
+    const schema = {name: "string"} as const
+    const db = await create({schema})
 
-  const schema = {name: "string"} as const
+    const cache = await createOramaCache(db, {
+      onHit: (key: string) => assert.deepStrictEqual(JSON.parse(key), {term: "foo"})
+    })
 
-  const db = await create({schema})
-
-  const cache = await createOramaCache(db, {
-    ttl: 1,
-    onMiss: (key: string) => t.same(JSON.parse(key), searchable)
+    await insert(db, {name: "foo"})
+    await cache.search({term: "foo"})
+    await cache.search({term: "foo"}) // hit key!
   })
 
-  await insert(db, {name: "foo"})
-  await cache.search(searchable)
+  test.it("should miss a cached key", async () => {
+    // t.plan(1)
 
-  await sleep(1500)
+    const schema = {name: "string"} as const
+    const db = await create({schema})
 
-  await cache.search(searchable)
-})
+    const cache = await createOramaCache(db, {
+      onMiss: (key: string) => assert.deepStrictEqual(JSON.parse(key), {term: "foo"})
+    })
 
-test("clear should clear the cache", async t => {
-  t.plan(2)
-
-  const schema = {name: "string"} as const
-
-  const db = await create({schema})
-
-  const cache = await createOramaCache(db, {
-    onMiss: (key: string) => t.same(JSON.parse(key), searchable)
+    await insert(db, {name: "foo"})
+    await cache.search({term: "foo"})
   })
 
-  await insert(db, {name: "foo"})
-  await cache.search(searchable)
+  test.it("ttl should expire a cached key", async () => {
+    // test.plan(2)
 
-  cache.clear()
+    const schema = {name: "string"} as const
+    const db = await create({schema})
 
-  await cache.search(searchable)
+    const cache = await createOramaCache(db, {
+      ttl: 1,
+      onMiss: (key: string) => assert.deepStrictEqual(JSON.parse(key), {term: "foo"})
+    })
+
+    await insert(db, {name: "foo"})
+    await cache.search({term: "foo"})
+
+    await sleep(1000)
+
+    await cache.search({term: "foo"}) // miss the expired key!
+  })
+
+  test("clear should clear the cache", async () => {
+    // test.plan(2)
+
+    const schema = {name: "string"} as const
+    const db = await create({schema})
+
+    const cache = await createOramaCache(db, {
+      onMiss: (key: string) => assert.deepStrictEqual(JSON.parse(key), {term: "foo"})
+    })
+
+    await insert(db, {name: "foo"})
+    await cache.search({term: "foo"})
+
+    cache.clear()
+
+    await cache.search({term: "foo"}) // miss the cleaned key!
+  })
 })
