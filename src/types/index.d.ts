@@ -1,7 +1,7 @@
 import type {SearchResult, SearchParams} from "@orama/orama/dist/methods/search"
 
 export type OptionsMemory = {
-  size: number
+  size?: number
   invalidation?: boolean
   log?: object
 }
@@ -17,10 +17,9 @@ type OptionsRedis = {
   log?: object
 }
 
-type StorageOptions = {
-  type: "memory" | "redis"
-  options?: OptionsMemory | OptionsRedis
-}
+export type StorageType = "memory" | "redis"
+
+export type StorageOptions = {type: Extract<StorageType, "memory">; options?: OptionsMemory} | {type: Extract<StorageType, "redis">; options: OptionsRedis}
 
 export type CreateCacheOptions = {
   ttl?: number
@@ -32,14 +31,8 @@ export type CreateCacheOptions = {
   storage?: StorageOptions
 }
 
-export type ValidatedCacheOptions = {
-  ttl: number
-  stale?: number
-  onDedupe?: (...args) => void
-  onError?: (...args) => void
-  onHit?: (key: string) => void
-  onMiss?: (key: string) => void
-  storage: StorageOptions
+export type ValidatedCacheOptions<T extends "memory" | "redis"> = Omit<CreateCacheOptions, "storage"> & {
+  storage: Required<StorageOptions & {type: T}>
 }
 
 declare module "async-cache-dedupe" {

@@ -1,151 +1,173 @@
-import {CreateCacheOptions, OptionsMemory, ValidatedCacheOptions} from "async-cache-dedupe"
-import {test} from "tap"
+import test from "node:test"
+import assert from "node:assert"
+import {CreateCacheOptions} from "async-cache-dedupe"
 import {validateOptions} from "../lib/validation.js"
 
-test("should validate ttl", ({plan, throws}) => {
-  plan(1)
-
-  const options = {ttl: -1} as CreateCacheOptions
-  throws(() => {
-    validateOptions(options)
-  }, "ttl must be greater than 0")
-})
-
-test("should validate stale", ({plan, throws}) => {
-  plan(2)
-
-  const options = {stale: -1} as CreateCacheOptions
-  throws(() => {
-    validateOptions(options)
-  }, "stale must be greater than 0")
-
-  // @ts-expect-error - stale is a number
-  const options2 = {stale: "foo"} as CreateCacheOptions
-  throws(() => {
-    validateOptions(options2)
-  }, "stale must be greater than 0")
-})
-
-test("should validate onDedupe", ({plan, throws}) => {
-  plan(1)
-
-  // @ts-expect-error - onDedupe is a function
-  const options = {onDedupe: "foo"} as CreateCacheOptions
-  throws(() => {
-    validateOptions(options)
-  }, "onDedupe must be a function")
-})
-
-test("should validate onError", ({plan, throws}) => {
-  plan(1)
-
-  // @ts-expect-error - onError is a function
-  const options = {onError: "foo"} as CreateCacheOptions
-  throws(() => {
-    validateOptions(options)
-  }, "onError must be a function")
-})
-
-test("should validate onHit", ({plan, throws}) => {
-  plan(1)
-
-  // @ts-expect-error - onHit is a function
-  const options = {onHit: "foo"} as CreateCacheOptions
-  throws(() => {
-    validateOptions(options)
-  }, "onHit must be a function")
-})
-
-test("should validate onMiss", ({plan, throws}) => {
-  plan(1)
-
-  // @ts-expect-error - onMiss is a function
-  const options = {onMiss: "foo"} as CreateCacheOptions
-  throws(() => {
-    validateOptions(options)
-  }, "onMiss must be a function")
-})
-
-test("should validate storage", async () => {
-  test("should validate storage type", async ({plan, throws}) => {
-    plan(1)
-
-    // @ts-expect-error - storage is memory or redis
-    const options = {storage: {type: "foo"}} as CreateCacheOptions
-    throws(() => {
-      validateOptions(options)
-    }, "storage.type must be memory or redis")
-  })
-
-  // memory storage tests
-  test("should validate memory storage", async () => {
-    test("should set default size as 1000", async ({plan, same}) => {
-      plan(1)
-
-      const options = {storage: {type: "memory"}} as CreateCacheOptions
-      const validatedOptions = validateOptions(options) as ValidatedCacheOptions
-      same((validatedOptions?.storage.options as OptionsMemory).size, 1000)
+test.describe("validate options", () => {
+  test.describe("ttl", () => {
+    test.it("should throw if ttl is a negative number", () => {
+      const options = {ttl: -1} as CreateCacheOptions
+      assert.throws(() => validateOptions(options), {message: /ttl must be greater than 0/})
     })
 
-    test("should throw if size is less than 0", async ({plan, throws}) => {
-      plan(1)
-
-      const options = {storage: {type: "memory", options: {size: -1}}} as CreateCacheOptions
-      throws(() => {
-        validateOptions(options)
-      }, "storage.options.size must be greater than 0")
+    test.it("should throw if ttl is not a number", () => {
+      // @ts-expect-error - test invalid type
+      const options = {ttl: "foo"} as CreateCacheOptions
+      assert.throws(() => validateOptions(options), {message: /ttl must be a number/})
     })
   })
 
-  // redis storage tests
-  test("should validate redis storage", async () => {
-    test("should validate redis storage client", async ({plan, throws}) => {
-      plan(1)
-
-      // @ts-expect-error - client is an object
-      const options = {storage: {type: "redis", options: {client: "foo"}}} as CreateCacheOptions
-      throws(() => {
-        validateOptions(options)
-      }, "storage.options.client is required")
+  test.describe("stale", () => {
+    test.it("should throw if stale is a negative number", () => {
+      const options = {stale: -1} as CreateCacheOptions
+      assert.throws(() => validateOptions(options), {message: /stale must be greater than 0/})
     })
 
-    test("should validate redis storage invalidation", async () => {
-      test("should throw if options are not defined", async ({plan, throws}) => {
-        plan(1)
+    test.it("should throw if stale is not a number", () => {
+      // @ts-expect-error - test invalid type
+      const options = {stale: "foo"} as CreateCacheOptions
+      assert.throws(() => validateOptions(options), {message: /stale must be a number/})
+    })
+  })
 
+  test.describe("onDedupe", () => {
+    test.it("should throw if onDedupe is not a function", () => {
+      // @ts-expect-error - test invalid type
+      const options = {onDedupe: "foo"} as CreateCacheOptions
+      assert.throws(() => validateOptions(options), {message: /onDedupe must be a function/})
+    })
+
+    test.it("should not throw if onDedupe is a function", () => {
+      const options = {onDedupe: () => {}} as CreateCacheOptions
+      assert.doesNotThrow(() => validateOptions(options))
+    })
+  })
+
+  test.describe("onError", () => {
+    test.it("should throw if onError is not a function", () => {
+      // @ts-expect-error - test invalid type
+      const options = {onError: "foo"} as CreateCacheOptions
+      assert.throws(() => validateOptions(options), {message: /onError must be a function/})
+    })
+
+    test.it("should not throw if onError is a function", () => {
+      const options = {onError: () => {}} as CreateCacheOptions
+      assert.doesNotThrow(() => validateOptions(options))
+    })
+  })
+
+  test.describe("onHit", () => {
+    test.it("should throw if onHit is not a function", () => {
+      // @ts-expect-error - test invalid type
+      const options = {onHit: "foo"} as CreateCacheOptions
+      assert.throws(() => validateOptions(options), {message: /onHit must be a function/})
+    })
+
+    test.it("should not throw if onHit is a function", () => {
+      const options = {onHit: () => {}} as CreateCacheOptions
+      assert.doesNotThrow(() => validateOptions(options))
+    })
+  })
+
+  test.describe("onMiss", () => {
+    test.it("should throw if onMiss is not a function", () => {
+      // @ts-expect-error - test invalid type
+      const options = {onMiss: "foo"} as CreateCacheOptions
+      assert.throws(() => validateOptions(options), {message: /onMiss must be a function/})
+    })
+
+    test.it("should not throw if onMiss is a function", () => {
+      const options = {onMiss: () => {}} as CreateCacheOptions
+      assert.doesNotThrow(() => validateOptions(options))
+    })
+  })
+
+  test.describe("storage", () => {
+    test.it("should throw if storage.type is not memory or redis", () => {
+      // @ts-expect-error - test invalid type
+      const options = {storage: {type: "foo"}} as CreateCacheOptions
+      assert.throws(() => validateOptions(options), {message: /storage.type must be memory or redis/})
+    })
+
+    test.describe("memory", () => {
+      test.it("should not throw if storage.type is memory", () => {
+        const options = {storage: {type: "memory"}} as CreateCacheOptions
+        assert.doesNotThrow(() => validateOptions(options))
+      })
+
+      test.it("should throw if storage.type is memory and storage.options.size is a negative number", () => {
+        const options = {storage: {type: "memory", options: {size: -1}}} as CreateCacheOptions
+        assert.throws(() => validateOptions(options), {message: /storage.options.size must be greater than 0/})
+      })
+
+      test.it("should throw if storage.type is memory and storage.options.size is not a number", () => {
+        // @ts-expect-error - test invalid type
+        const options = {storage: {type: "memory", options: {size: "foo"}}} as CreateCacheOptions
+        assert.throws(() => validateOptions(options), {message: /storage.options.size must be a number/})
+      })
+
+      test.describe("size", () => {
+        test.it("should set storage.options.size to 1000 if not defined", () => {
+          const options = {storage: {type: "memory"}} as const
+          const validated = validateOptions(options)
+          assert.strictEqual(validated.storage.options.size, 1000)
+        })
+
+        test.it("should throw if storage.type is memory and storage.options.size is a negative number", () => {
+          const options = {storage: {type: "memory", options: {size: -1}}} as CreateCacheOptions
+          assert.throws(() => validateOptions(options), {message: /storage.options.size must be greater than 0/})
+        })
+      })
+    })
+
+    test.describe("redis", () => {
+      test.it("should not throw if storage.type is redis with options", () => {
+        const options = {storage: {type: "redis", options: {client: {}}}} as unknown as CreateCacheOptions
+        assert.doesNotThrow(() => validateOptions(options))
+      })
+
+      test.it("should throw if storage.type is redis without options", () => {
         const options = {storage: {type: "redis"}} as CreateCacheOptions
-        throws(() => {
-          validateOptions(options)
-        }, "storage.options.invalidation must be defined")
+        assert.throws(() => validateOptions(options), {message: /storage.options must be defined/})
       })
 
-      test("should throw if invalidate is not a boolean", async ({plan, throws}) => {
-        plan(1)
-
-        // @ts-expect-error - invalidate is a boolean
-        const options = {storage: {type: "redis", options: {client: {}, invalidation: {invalidate: "foo"}}}} as CreateCacheOptions
-        throws(() => {
-          validateOptions(options)
-        }, "storage.options.invalidation must be a boolean")
+      test.it("should throw if storage.type is redis and storage.options is not defined", () => {
+        const options = {storage: {type: "redis"}} as CreateCacheOptions
+        assert.throws(() => validateOptions(options), {message: /storage.options must be defined/})
       })
 
-      test("should throw if referencesTTL is less than 0", async ({plan, throws}) => {
-        plan(1)
-
-        const options = {storage: {type: "redis", options: {client: {}, invalidation: {invalidate: false, referencesTTL: -1}}}} as CreateCacheOptions
-        throws(() => {
-          validateOptions(options)
-        }, "storage.options.invalidation.referencesTTL must be greater than 0")
+      test.it("should throw if storage.type is redis and storage.options.client is not defined", () => {
+        const options = {storage: {type: "redis", options: {}}} as CreateCacheOptions
+        assert.throws(() => validateOptions(options), {message: /storage.options.client is required/})
       })
 
-      test("should throw if client is not an object", async ({plan, throws}) => {
-        plan(1)
+      test.describe("invalidation", () => {
+        test.it("should throw if storage.type is redis and storage.options.invalidation.invalidate is not set", () => {
+          const options = {storage: {type: "redis", options: {client: {}, invalidation: {}}}} as CreateCacheOptions
+          assert.throws(() => validateOptions(options), {message: /storage.options.invalidation.invalidate must be a boolean/})
+        })
 
-        // @ts-expect-error - client is not defined
-        const options = {storage: {type: "redis", options: {client: undefined}}} as CreateCacheOptions
-        throws(() => {
-          validateOptions(options)
-        }, "storage.options.client is required")
+        test.it("should throw if storage.type is redis and storage.options.invalidation.invalidate is not a boolean", () => {
+          // @ts-expect-error - test invalid type
+          const options = {storage: {type: "redis", options: {client: {}, invalidation: {invalidate: -1}}}} as CreateCacheOptions
+          assert.throws(() => validateOptions(options), {message: /storage.options.invalidation.invalidate must be a boolean/})
+        })
+
+        test.it("should throw if storage.type is redis and storage.options.invalidation.referencesTTL is not a number", () => {
+          // @ts-expect-error - test invalid type
+          const options = {storage: {type: "redis", options: {client: {}, invalidation: {invalidate: true, referencesTTL: "foo"}}}} as CreateCacheOptions
+          assert.throws(() => validateOptions(options), {message: /storage.options.invalidation.referencesTTL must be a number/})
+        })
+
+        test.it("should throw if storage.type is redis and storage.options.invalidation.referencesTTL is a negative number", () => {
+          const options = {storage: {type: "redis", options: {client: {}, invalidation: {invalidate: true, referencesTTL: -1}}}} as CreateCacheOptions
+          assert.throws(() => validateOptions(options), {message: /storage.options.invalidation.referencesTTL must be greater than 0/})
+        })
+
+        test.it("should not throw if storage.type is redis and storage.options.invalidation.referencesTTL is a positive number", () => {
+          const options = {storage: {type: "redis", options: {client: {}, invalidation: {invalidate: true, referencesTTL: 1}}}} as CreateCacheOptions
+          assert.doesNotThrow(() => validateOptions(options))
+        })
       })
     })
   })
