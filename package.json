@@ -1,12 +1,10 @@
 {
   "name": "orama-cache",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Implement the cache dedupe on your Orama instances",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/esm/index.d.ts",
-  "browser": "./dist/client/index.js",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "homepage": "https://github.com/mateonunez/orama-cache#readme",
   "repository": {
     "type": "git",
@@ -22,10 +20,7 @@
     "format": "prettier --write \"./src/**/*.{ts,js}\"",
     "lint": "npm run format && eslint . --ext .js,.ts --ignore-path .gitignore",
     "test": "npm run lint && node --loader ts-node/esm --test ./src/tests/**",
-    "build:cjs": "tsc --project tsconfig.cjs.json",
-    "build:esm": "tsc --project tsconfig.esm.json",
-    "build:browser": "esbuild --bundle --sourcemap --target=es2019 --format=esm --outfile=./dist/client/index.js ./src/index.ts",
-    "build": "rimraf ./dist && npm run build:esm && npm run build:cjs && npm run build:browser",
+    "build": "rimraf ./dist && tsc --project tsconfig.json",
     "prepare": "husky install",
     "benchmark": "node --no-warnings ./benchmark/orama-cache.js",
     "redis": "docker run --rm -p 6379:6379 redis redis-server"

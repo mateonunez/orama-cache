@@ -5,7 +5,7 @@ import {validateOptions} from "./lib/validation.js"
 import type {CreateCacheOptions} from "async-cache-dedupe"
 import type {Orama, Results, SearchParams} from "@orama/orama"
 
-export async function createOramaCache<T>(db: Orama<T>, cacheOptions: CreateCacheOptions = {ttl: 60, storage: {type: "memory"}}) {
+function createOramaCache<T>(db: Orama<T>, cacheOptions: CreateCacheOptions = {ttl: 60, storage: {type: "memory"}}) {
   async function searchOrama(params: SearchParams<Orama<T>, T>): Promise<Results<T>> {
     return search(db, params)
   }
@@ -17,3 +17,5 @@ export async function createOramaCache<T>(db: Orama<T>, cacheOptions: CreateCach
 
   return cache
 }
+
+export default createOramaCache
