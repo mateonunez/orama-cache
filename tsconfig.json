@@ -19,6 +19,7 @@
         "./src/types/index.d.ts"
       ],
     },
+    "outDir": "./dist",
   },
   "include": [
     "src/**/*"
