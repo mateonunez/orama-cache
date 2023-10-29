@@ -18,4 +18,5 @@ function createOramaCache<T>(db: Orama<T>, cacheOptions: CreateCacheOptions = {t
   return cache
 }
 
+export {createOramaCache}
 export default createOramaCache
