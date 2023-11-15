@@ -137,7 +137,7 @@ npm run redis
 That command shall start a new Redis istance using Docker. Then run the tests.
 
 ```bash
-npm run tests
+npm run test
 ```
 
 ## 📝 License

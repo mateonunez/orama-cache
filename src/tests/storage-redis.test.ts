@@ -1,5 +1,5 @@
-import test from "node:test"
-import assert from "node:assert"
+import {test} from "node:test"
+import {tspl, Plan} from "@matteo.collina/tspl"
 import {promisify} from "node:util"
 import {create, insert} from "@orama/orama"
 import {createOramaCache} from "../index.js"
@@ -7,19 +7,22 @@ import Redis from "ioredis"
 
 const sleep = promisify(setTimeout)
 
+// @ts-expect-error - test invalid type
 const redisClient = new Redis()
 
-test.describe("redis storage", () => {
+test("redis storage", async t => {
   test.after(async () => {
     await redisClient.quit()
   })
 
-  test.it("should use redis storage", async () => {
+  await t.test("should use redis storage", async t => {
+    const assert: Plan = tspl(t, {plan: 1})
+
     const db = await create({
       schema: {name: "string"}
     })
 
-    const cache = await createOramaCache(db, {
+    const cache = createOramaCache(db, {
       storage: {
         type: "redis",
         options: {
@@ -36,13 +39,14 @@ test.describe("redis storage", () => {
     assert.deepStrictEqual(results, resultsCached)
   })
 
-  test.skip("should invalidate with referencesTTL", async () => {
-    // test.plan(2)
+  await t.test("should invalidate with referencesTTL", {skip: true}, async t => {
+    const assert: Plan = tspl(t, {plan: 2})
+
     const db = await create({
       schema: {name: "string"}
     })
 
-    const cache = await createOramaCache(db, {
+    const cache = createOramaCache(db, {
       storage: {
         type: "redis",
         options: {
