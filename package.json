@@ -19,7 +19,7 @@
   "scripts": {
     "format": "prettier --write \"./src/**/*.{ts,js}\"",
     "lint": "npm run format && eslint . --ext .js,.ts --ignore-path .gitignore",
-    "test": "npm run lint && node --loader ts-node/esm --test ./src/tests/**",
+    "test": "npm run lint && c8 node --loader ts-node/esm --test ./src/tests/**.test.ts",
     "build": "rimraf ./dist && tsc --project tsconfig.json",
     "prepare": "husky install",
     "benchmark": "node --no-warnings ./benchmark/orama-cache.js",
@@ -41,10 +41,12 @@
     "async-cache-dedupe": "^2.0.0"
   },
   "devDependencies": {
+    "@matteo.collina/tspl": "^0.1.0",
     "@types/node": "^20.8.6",
     "@types/tap": "^15.0.9",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@typescript-eslint/parser": "^6.8.0",
+    "c8": "^8.0.1",
     "cronometro": "^1.1.5",
     "esbuild": "^0.19.4",
     "eslint": "^8.51.0",
