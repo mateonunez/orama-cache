@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "format": "prettier --write \"./src/**/*.{ts,js}\"",
-    "lint": "npm run format && eslint . --ext .js,.ts --ignore-path .gitignore",
+    "lint": "npm run format && eslint --ext .js,.ts --ignore-path .gitignore .",
     "test": "npm run lint && c8 node --loader ts-node/esm --test ./src/tests/**.test.ts",
     "build": "rimraf ./dist && tsc --project tsconfig.json",
     "prepare": "husky install",
@@ -37,25 +37,25 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@orama/orama": "^2.0.0-beta.1",
-    "async-cache-dedupe": "^2.0.0"
+    "@orama/orama": "^2.0.20",
+    "async-cache-dedupe": "^2.2.0"
   },
   "devDependencies": {
-    "@matteo.collina/tspl": "^0.1.0",
-    "@types/node": "^20.8.6",
-    "@types/tap": "^15.0.9",
+    "@matteo.collina/tspl": "^0.1.1",
+    "@types/node": "^20.14.8",
+    "@types/tap": "^15.0.11",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@typescript-eslint/parser": "^6.8.0",
-    "c8": "^9.0.0",
-    "cronometro": "^2.0.0",
-    "esbuild": "^0.19.4",
+    "c8": "^10.1.2",
+    "cronometro": "^3.0.2",
+    "esbuild": "^0.21.5",
     "eslint": "^8.51.0",
-    "husky": "^8.0.3",
-    "ioredis": "^5.3.2",
-    "prettier": "^3.0.3",
-    "rimraf": "^5.0.5",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "husky": "^9.0.11",
+    "ioredis": "^5.4.1",
+    "prettier": "^3.3.2",
+    "rimraf": "^5.0.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.2"
   },
   "publishConfig": {
     "access": "public"
